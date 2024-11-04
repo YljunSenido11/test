@@ -18,4 +18,8 @@ Route::middleware([
     Route::get('/register', function () {
         return view('livewire.register');
     })->name('register');
+
+    Route::get('/product', function () {
+        return view('livewire.product');
+    })->name('product');
 });
