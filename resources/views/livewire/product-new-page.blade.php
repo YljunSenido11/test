@@ -55,52 +55,85 @@
     </div>
     
     <div class="relative overflow-x-auto">
-    <h2 class="text-2xl font-semibold mb-4 mt-10">Registered Users</h2>
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mb-10">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">  
-                    Product Name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Quantity
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Price
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Condition
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Description
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($product_news as $product)
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <td class="px-6 py-4">
-                   {{$product->productname}}
-                </td>
-                <td class="px-6 py-4">
-                   {{$product->quantity}}
-                </td>
-                <td class="px-6 py-4">
-                   {{$product->price}}
-                </td>
-                <td class="px-6 py-4">
-                   {{$product->condition}}
-                </td>
-                <td class="px-6 py-4">
-                   {{$product->description}}
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-<div>
+        <h2 class="text-2xl font-semibold mb-4 mt-10">Registered Users</h2>
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-10">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th class="px-6 py-3">Product Name</th>
+                    <th class="px-6 py-3">Quantity</th>
+                    <th class="px-6 py-3">Price</th>
+                    <th class="px-6 py-3">Condition</th>
+                    <th class="px-6 py-3">Description</th>
+                    <th class="px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($product_news as $product)
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-6 py-4">{{ $product->productname }}</td>
+                    <td class="px-6 py-4">{{ $product->quantity }}</td>
+                    <td class="px-6 py-4">{{ $product->price }}</td>
+                    <td class="px-6 py-4">{{ $product->condition }}</td>
+                    <td class="px-6 py-4">{{ $product->description }}</td>
+                    <td class="px-6 py-4">
+                    <button wire:click="edit({{ $product->id }})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Update</button>
+                    <button wire:click="confirmDelete({{ $product->id }})" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-600 ml-2">Delete</button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     {{ $product_news->links() }}
+
+<!-- Edit Modal -->
+<div x-data="{ open: @entangle('isModalOpen') }" x-show="open" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-1/3">
+        <h2 class="text-xl font-bold mb-4">Update Product</h2>
+
+        <div class="mb-4">
+            <input wire:model="editProductname" type="text" placeholder="Product Name" class="border p-2 w-full rounded-md">
+            @error('editProductname') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-4">
+            <input wire:model="editQuantity" type="number" placeholder="Quantity" class="border p-2 w-full rounded-md">
+            @error('editQuantity') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-4">
+            <input wire:model="editPrice" type="number" placeholder="Price" class="border p-2 w-full rounded-md">
+            @error('editPrice') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-4">
+            <select wire:model="editCondition" class="border p-2 w-full rounded-md">
+                <option value="">Select Condition</option>
+                <option value="New">New</option>
+                <option value="Slightly Used">Slightly Used</option>
+                <option value="Old">Old</option>
+            </select>
+            @error('editCondition') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-4">
+            <textarea wire:model="editDescription" placeholder="Description" class="border p-2 w-full rounded-md"></textarea>
+            @error('editDescription') <span class="text-red-500">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="flex justify-end">
+            <button wire:click="closeModal" class="bg-red-600 text-white px-3 py-2 rounded-md mr-2">Cancel</button>
+            <button wire:click="updateProduct" class="bg-blue-600 text-white px-3 py-2 rounded-md">Update</button>
+        </div>
+    </div>
+</div>
+
+<div x-data="{ open: @entangle('isDeleteModalOpen') }" x-show="open" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-1/5">
+        <h3 class="text-xl font-bold mb-2    text-center">Delete</h2>
+        <h4 class="text-xl mb-8 text-center">Are you sure you want to delete this product?</h2>
+        
+        <div class="flex justify-around">
+            <button wire:click="deleteProduct" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</button>
+            <button wire:click="closeDeleteModal" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500">Cancel</button>
+        </div>
+    </div>
 </div>
 
 </div>
