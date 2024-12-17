@@ -55,7 +55,7 @@
     </div>
     
     <div class="relative overflow-x-auto">
-        <h2 class="text-2xl font-semibold mb-4 mt-10">Registered Users</h2>
+        <h2 class="text-2xl font-semibold mb-4 mt-10">Products</h2>
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-10">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -125,15 +125,15 @@
 </div>
 
 <div x-data="{ open: @entangle('isDeleteModalOpen') }" x-show="open" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg w-1/5">
-        <h3 class="text-xl font-bold mb-2    text-center">Delete</h2>
-        <h4 class="text-xl mb-8 text-center">Are you sure you want to delete this product?</h2>
-        
-        <div class="flex justify-around">
-            <button wire:click="deleteProduct" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</button>
-            <button wire:click="closeDeleteModal" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500">Cancel</button>
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-xl font-semibold mb-4">Delete User</h2>
+            <p>Are you sure you want to delete this user?</p>
+
+            <div class="flex justify-end space-x-4 mt-6">
+                <button type="button" wire:click="closeDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded text-sm">Cancel</button>
+                <button type="button" wire:click="deleteProduct" class="bg-red-600 text-white px-4 py-2 rounded text-sm">Delete</button>
+            </div>
         </div>
-    </div>
 </div>
 
 </div>
